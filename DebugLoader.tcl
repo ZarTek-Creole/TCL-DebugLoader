@@ -10,11 +10,11 @@
 #	Tr�s pratique pour les developpers, afin de suivre les erreurs,
 #	mais �galement il permet de ne pas "plant�" le robot en cas de probleme de syntaxe apres un rehash.
 #
-# Copyright 2008-2015 by ARTiSPRETiS (Familly) ARTiSPRETiS@GMail.Com
+# Copyright 2008-2015 by Creole (Familly) Creole@GMail.Com
 #
-# Create by MalaGaM <MalaGaM.ARTiSPRETiS@GMail.Com>
+# Create by ZarTek <ZarTek.Creole@GMail.Com>
 #
-# Contact: ARTiSPRETiS@GMail.Com
+# Contact: Creole@GMail.Com
 #
 # Script Date:
 # 2011-03-24 : -
@@ -152,4 +152,4 @@ proc bgerror {message} {
 
 ::DebugLoader::INIT
 trace add variable ::ErrorInfo write ::DebugLoader::LogErr;
-putlog "DebugLoader.tcl v[package require DebugLoader] ($::DebugLoader::date_ver) Create by MaLaGaM - Copyright 2008-2021 by ARTiSPRETiS <ARTiSPRETiS@GMail.Com> loaded.";
+putlog "DebugLoader.tcl v[package require DebugLoader] ($::DebugLoader::date_ver) Create by ZarTek - Copyright 2008-2021 by Creole <Creole@GMail.Com> loaded.";
