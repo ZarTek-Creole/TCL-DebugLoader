@@ -1,142 +1,161 @@
 # TCL-DebugLoader
 
-TCL-DebugLoader is a Tcl script designed to be loaded first in an Eggdrop bot's configuration. It facilitates the loading of other Tcl scripts while providing robust error handling and advanced debugging features inspired by LiveBugTracer. Errors are redirected to a log file (`logs_Error/${::botnet-nick}_Error.log`) and optionally to a specified IRC channel (`CONF(CHANNEL_LOG)`). This tool is invaluable for developers, ensuring stable bot operation and detailed error tracking.
+## 📋 Description
 
-## Features
+TCL-DebugLoader est un script Tcl conçu pour être chargé en premier dans la configuration d'un bot Eggdrop. Il facilite le chargement d'autres scripts Tcl tout en fournissant une gestion robuste des erreurs et des fonctionnalités avancées de débogage inspirées de LiveBugTracer.
 
-- **Error Redirection**: Captures and logs Tcl script errors to `logs_Error/${::botnet-nick}_Error.log` with full stack traces.
-- **Channel Logging**: Sends error messages to a configurable IRC channel (`CONF(CHANNEL_LOG)`) for real-time monitoring.
-- **Crash Prevention**: Ensures the Eggdrop bot remains stable even if a loaded script contains syntax errors, with optional bot termination (`DIE_ON_ERROR`).
-- **Variable Tracing**: Tracks read/write/unset operations on specified variables (e.g., `CONF`) for debugging.
-- **Infinite Loop Protection**: Detects and interrupts infinite loops in `for` and `while` commands, configurable via `ANTI_INFINITE_LOOP`.
-- **Network Error Reporting**: Sends error messages to other bots via `putallbots` (configurable via `NETWORK_ERROR_REPORT`).
-- **Developer-Friendly**: Centralizes error reporting, suppresses duplicate errors, and provides detailed stack traces for easier debugging.
+Ce script professionnel assure la stabilité du bot même en cas d'erreurs de syntaxe dans les scripts chargés, tout en offrant un suivi détaillé des erreurs pour les développeurs.
 
-## Prerequisites
+## ✨ Fonctionnalités principales
 
-- **Eggdrop**: Version 1.6.20 or higher.
-- **Tcl**: Version 8.6 or higher (typically included with Eggdrop).
-- **Write Permissions**: Ensure the bot has write permissions in the `logs_Error/` directory for error log creation.
+- **Redirection des erreurs** : Capture et enregistre automatiquement toutes les erreurs Tcl dans `logs_Error/${::botnet-nick}_Error.log` avec traces complètes de la pile d'exécution
+- **Journalisation sur canal IRC** : Envoi des messages d'erreur vers un canal IRC configurable (`CONF(CHANNEL_LOG)`) pour un suivi en temps réel
+- **Protection contre les plantages** : Garantit la stabilité de l'Eggdrop même si un script contient des erreurs de syntaxe, avec option d'arrêt du bot (`DIE_ON_ERROR`)
+- **Traçage de variables** : Surveillance des opérations de lecture/écriture/suppression sur des variables spécifiées (ex: `CONF`) pour le débogage
+- **Protection contre les boucles infinies** : Détection et interruption des boucles infinies dans les commandes `for` et `while` (configurable via `ANTI_INFINITE_LOOP`)
+- **Rapport d'erreurs réseau** : Envoi des messages d'erreur aux autres bots via `putallbots` (configurable via `NETWORK_ERROR_REPORT`)
+- **Interface développeur optimisée** : Centralisation des rapports d'erreur, suppression des erreurs en double et traces détaillées pour faciliter le débogage
 
-## Installation
+## 📦 Prérequis
 
-1. **Clone or Download the Repository**:
-   ```bash
-   git clone https://github.com/ZarTek-Creole/TCL-DebugLoader.git
-   ```
-   Alternatively, download the ZIP file from the [GitHub repository](https://github.com/ZarTek-Creole/TCL-DebugLoader) and extract it.
+- **Eggdrop** : Version 1.6.20 ou supérieure
+- **Tcl** : Version 8.6 ou supérieure (généralement incluse avec Eggdrop)
+- **Permissions d'écriture** : Le bot doit avoir les permissions d'écriture dans le répertoire `logs_Error/` pour la création des fichiers de journalisation
 
-2. **Move the Script**:
-   Copy the `TCL-DebugLoader.tcl` file to your Eggdrop bot's `scripts` directory:
-   ```bash
-   cp TCL-DebugLoader/TCL-DebugLoader.tcl /path/to/eggdrop/scripts/
-   ```
+## 🚀 Installation
 
-3. **Edit Eggdrop Configuration**:
-   Open your Eggdrop configuration file (e.g., `eggdrop.conf`) and add the following line at the **top** of the script loading section:
-   ```tcl
-   source scripts/TCL-DebugLoader.tcl
-   ```
+### 1. Cloner ou télécharger le dépôt
 
-4. **Rehash or Restart the Bot**:
-   In the Eggdrop console or IRC, run:
-   ```
-   .rehash
-   ```
-   Alternatively, restart the bot:
-   ```bash
-   ./eggdrop -m eggdrop.conf
-   ```
+```bash
+git clone https://github.com/ZarTek-Creole/TCL-DebugLoader.git
+```
 
-## Configuration
+Alternativement, téléchargez le fichier ZIP depuis le [dépôt GitHub](https://github.com/ZarTek-Creole/TCL-DebugLoader) et extrayez-le.
 
-1. **Set the Debug Channel**:
-   In `TCL-DebugLoader.tcl`, configure the `CONF(CHANNEL_LOG)` variable to specify the IRC channel for error reporting:
-   ```tcl
-   array set CONF {
-       CHANNEL_LOG "#mydebugchannel"
-       SCRIPTS_LIST {script1.tcl script2.tcl}
-       DIE_ON_ERROR 0
-       NETWORK_ERROR_REPORT 0
-       WATCH_VARIABLES {CONF}
-       ANTI_INFINITE_LOOP 0
-       ASSUME_INFINITE_LOOP_AFTER 5
-   }
-   ```
-   Ensure the bot is joined to this channel in your Eggdrop configuration.
+### 2. Déplacer le script
 
-2. **Log File Location**:
-   The script creates a log file in `logs_Error/${::botnet-nick}_Error.log`. Ensure write permissions in the `logs_Error/` directory.
+Copiez le fichier `DebugLoader.tcl` vers le répertoire `scripts` de votre bot Eggdrop :
 
-3. **Loading Additional Scripts**:
-   Specify scripts to load in `CONF(SCRIPTS_LIST)`:
-   ```tcl
-   array set CONF {
-       SCRIPTS_LIST {TopClient/TopClient.tcl}
-       ...
-   }
-   ```
+```bash
+cp TCL-DebugLoader/DebugLoader.tcl /chemin/vers/eggdrop/scripts/
+```
 
-4. **Variable Tracing**:
-   Add variables to trace in `CONF(WATCH_VARIABLES)` (e.g., `{CONF error_report}`) to monitor their read/write/unset operations.
+### 3. Modifier la configuration Eggdrop
 
-5. **Infinite Loop Protection**:
-   Enable loop protection by setting `CONF(ANTI_INFINITE_LOOP) 1` and configure the timeout with `CONF(ASSUME_INFINITE_LOOP_AFTER)` (in seconds).
+Ouvrez votre fichier de configuration Eggdrop (ex: `eggdrop.conf`) et ajoutez la ligne suivante **en haut** de la section de chargement des scripts :
 
-## Usage
+```tcl
+source scripts/DebugLoader.tcl
+```
 
-1. **Start the Bot**:
-   Run your Eggdrop bot as usual. TCL-DebugLoader will load first and handle other specified Tcl scripts.
+**Important** : Ce script doit être chargé avant tous les autres scripts pour intercepter correctement les erreurs.
 
-2. **Monitor Errors**:
-   - Check `logs_Error/${::botnet-nick}_Error.log` for detailed error messages and stack traces.
-   - Join the configured `CONF(CHANNEL_LOG)` IRC channel for real-time error notifications.
+### 4. Recharger ou redémarrer le bot
 
-3. **Debugging**:
-   - If a script fails to load, TCL-DebugLoader logs the error without crashing the bot (unless `DIE_ON_ERROR` is enabled).
-   - Use variable tracing to monitor specific variables (e.g., `CONF` or `error_report`).
-   - Fix scripts and issue `.rehash` to reload.
+Dans la console Eggdrop ou sur IRC, exécutez :
 
-## Example
+```
+.rehash
+```
 
-Suppose your bot’s nickname is `MyBot`, and `CONF(CHANNEL_LOG)` is set to `#debug`. If `TopClient/TopClient.tcl` contains an error (e.g., undefined variable `error_report`), TCL-DebugLoader will:
+Alternativement, redémarrez le bot :
 
-- Write to `logs_Error/MyBot_Error.log`:
-  ```
-  [2025-07-22 01:00:00] Variable read $::DebugLoader::error_report: N/A (Context: some_proc arg1 arg2)
-  [2025-07-22 01:00:00] Error loading TopClient/TopClient.tcl: can't read "error_report": no such variable (Line: 123)
-  [2025-07-22 01:00:00] Stack Trace:
-  [2025-07-22 01:00:00]   > can't read "error_report": no such variable
-  [2025-07-22 01:00:00]   >     while executing
-  [2025-07-22 01:00:00]   > "set result $error_report"
-  [2025-07-22 01:00:00]   >     (procedure "some_proc" line 123)
-  ```
+```bash
+./eggdrop -m eggdrop.conf
+```
 
-- Send to `#debug`:
-  ```
-  [DebugLoader] Variable read $::DebugLoader::error_report: N/A (Context: some_proc arg1 arg2)
-  [DebugLoader] Error loading TopClient/TopClient.tcl: can't read "error_report": no such variable (Line: 123)
-  ```
+## ⚙️ Configuration
 
-## Contributing
+### Définir le canal de débogage
 
-Contributions are welcome! To contribute:
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes and commit (`git commit -m "Add new feature"`).
-4. Push to your branch (`git push origin feature-branch`).
-5. Open a pull request on the [GitHub repository](https://github.com/ZarTek-Creole/TCL-DebugLoader).
+Dans `DebugLoader.tcl`, configurez la variable `CONF(CHANNEL_LOG)` pour spécifier le canal IRC de rapport d'erreurs :
 
-Please ensure changes are well-documented and tested with an Eggdrop bot.
+```tcl
+set CONF(CHANNEL_LOG) "#debug"
+```
 
-## License
+### Options de configuration avancées
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file or [https://opensource.org/licenses/MIT](https://opensource.org/licenses/MIT) for details.
+- **DIE_ON_ERROR** : Arrête le bot en cas d'erreur fatale (désactivé par défaut)
+- **ANTI_INFINITE_LOOP** : Active la protection contre les boucles infinies
+- **NETWORK_ERROR_REPORT** : Active l'envoi des erreurs aux autres bots du réseau
+- **Variables à tracer** : Personnalisez les variables à surveiller pour le débogage
 
-## Contact
+## 📖 Utilisation
 
-For questions or support, open an issue on the [GitHub repository](https://github.com/ZarTek-Creole/TCL-DebugLoader) or contact ZarTek-Creole via GitHub.
+Une fois installé et configuré, TCL-DebugLoader fonctionne automatiquement en arrière-plan. Toutes les erreurs Tcl sont :
+
+1. Enregistrées dans `logs_Error/${::botnet-nick}_Error.log` avec horodatage et trace complète
+2. Envoyées au canal IRC configuré (si défini)
+3. Optionnellement diffusées aux autres bots du réseau
+
+### Exemple de sortie d'erreur
+
+```
+[10:30:45] [ERROR] Script: test.tcl
+[10:30:45] Message: invalid command name "commande_invalide"
+[10:30:45] Stack trace:
+    invoked from within "commande_invalide"
+    (file "scripts/test.tcl" line 42)
+```
+
+## 🔍 Fonctionnalités de débogage avancées
+
+### Traçage de variables
+
+Le script peut surveiller l'accès aux variables critiques :
+
+```tcl
+# Trace automatique de la variable CONF
+trace add variable CONF {read write unset} ::DebugLoader::traceVariable
+```
+
+### Détection de boucles infinies
+
+Protection automatique contre les boucles infinies :
+
+```tcl
+# Configuration du timeout (en millisecondes)
+set CONF(LOOP_TIMEOUT) 5000
+```
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! N'hésitez pas à :
+
+1. Forker le projet
+2. Créer une branche pour votre fonctionnalité (`git checkout -b feature/amelioration`)
+3. Commiter vos changements (`git commit -m 'Ajout d'une fonctionnalité'`)
+4. Pousser vers la branche (`git push origin feature/amelioration`)
+5. Ouvrir une Pull Request
+
+## 📝 Licence
+
+Ce projet est distribué sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+
+## 👤 Auteur
+
+**ZarTek-Creole**
+
+- GitHub: [@ZarTek-Creole](https://github.com/ZarTek-Creole)
+- Projet: [TCL-DebugLoader](https://github.com/ZarTek-Creole/TCL-DebugLoader)
+
+## 🐛 Support et bugs
+
+Pour signaler un bug ou demander une fonctionnalité, veuillez ouvrir une issue sur le [dépôt GitHub](https://github.com/ZarTek-Creole/TCL-DebugLoader/issues).
+
+## ⭐ Remerciements
+
+- Inspiré par LiveBugTracer pour ses fonctionnalités de débogage avancées
+- Communauté Eggdrop pour le support et les retours
+- Tous les contributeurs qui ont participé à l'amélioration de ce projet
+
+## 📚 Documentation complémentaire
+
+- [Documentation Eggdrop](https://www.eggheads.org/support/egghtml/)
+- [Documentation Tcl](https://www.tcl.tk/man/)
+- [Guide des meilleures pratiques Tcl](https://wiki.tcl-lang.org/page/Tcl+Style+Guide)
 
 ---
 
-© 2025 ZarTek-Creole
+**Note** : Ce script est un outil de développement professionnel. Pour une utilisation en production, assurez-vous de tester toutes les configurations dans un environnement de test avant le déploiement.
